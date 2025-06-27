@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/jogador.dart';
 import '../models/time.dart';
 import '../services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CadastrarJogadorScreen extends StatefulWidget {
   const CadastrarJogadorScreen({super.key});
@@ -35,6 +36,7 @@ class _CadastrarJogadorScreenState extends State<CadastrarJogadorScreen> {
   void initState() {
     super.initState();
     carregarTimes();
+    carregarUltimoJogador(); // Carrega o nome salvo ao abrir a tela
   }
 
   Future<void> carregarTimes() async {
@@ -43,6 +45,22 @@ class _CadastrarJogadorScreenState extends State<CadastrarJogadorScreen> {
       times = lista;
       carregando = false;
     });
+  }
+
+  Future<void> salvarUltimoJogador(String nome) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('ultimoJogador', nome);
+  }
+
+  Future<void> carregarUltimoJogador() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? nome = prefs.getString('ultimoJogador');
+
+    if (nome != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Último jogador cadastrado: $nome')),
+      );
+    }
   }
 
   Future<void> salvarJogador() async {
@@ -55,6 +73,7 @@ class _CadastrarJogadorScreenState extends State<CadastrarJogadorScreen> {
       );
 
       await apiService.createJogador(novoJogador);
+      await salvarUltimoJogador(novoJogador.nome); // Salva localmente
       Navigator.pop(context);
     }
   }

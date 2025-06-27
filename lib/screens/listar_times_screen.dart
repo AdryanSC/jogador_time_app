@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/time.dart';
 import '../services/api_service.dart';
 import 'cadastrar_time_screen.dart';
@@ -20,6 +21,7 @@ class _ListarTimesScreenState extends State<ListarTimesScreen> {
   void initState() {
     super.initState();
     carregarTimes();
+    carregarUltimoTime(); // Mostra o último time salvo
   }
 
   Future<void> carregarTimes() async {
@@ -34,6 +36,16 @@ class _ListarTimesScreenState extends State<ListarTimesScreen> {
       setState(() {
         carregando = false;
       });
+    }
+  }
+
+  Future<void> carregarUltimoTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? nome = prefs.getString('ultimoTime');
+    if (nome != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Último time cadastrado: $nome')),
+      );
     }
   }
 
