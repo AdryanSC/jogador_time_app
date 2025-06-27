@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'listar_times_screen.dart';
 import 'listar_jogadores_screen.dart';
+import '../services/theme_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,7 +9,18 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('BRASILEIRÃO DO TI'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            tooltip: 'Alternar Tema',
+            onPressed: () {
+              ThemeController.toggleTheme();
+            },
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +59,9 @@ class HomeScreen extends StatelessWidget {
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
+                      vertical: 16,
+                      horizontal: 24,
+                    ),
                   ),
                   icon: const Icon(Icons.shield),
                   label: const Text('Times'),
@@ -66,7 +80,9 @@ class HomeScreen extends StatelessWidget {
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
+                      vertical: 16,
+                      horizontal: 24,
+                    ),
                   ),
                   icon: const Icon(Icons.person),
                   label: const Text('Jogadores'),
@@ -80,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

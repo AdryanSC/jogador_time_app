@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/time.dart';
 import '../services/api_service.dart';
 
@@ -16,6 +17,11 @@ class _CadastrarTimeScreenState extends State<CadastrarTimeScreen> {
 
   final ApiService apiService = ApiService();
 
+  Future<void> _salvarUltimoTime(String nome) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('ultimoTime', nome);
+  }
+
   Future<void> _salvarTime() async {
     if (_formKey.currentState!.validate()) {
       final novoTime = Time(
@@ -25,6 +31,9 @@ class _CadastrarTimeScreenState extends State<CadastrarTimeScreen> {
       );
 
       await apiService.createTime(novoTime);
+
+      // Salva o nome do time localmente
+      await _salvarUltimoTime(novoTime.nome);
 
       Navigator.pop(context);
     }
